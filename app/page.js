@@ -298,7 +298,6 @@ export default function Home() {
                         <span className="text-xl sm:text-2xl">{getCategoryIcon(category)}</span>
                         <span>{category}</span>
                       </h3>
-                      </h3>
                       <div className="space-y-3 sm:space-y-4">
                         {items.map((item, idx) => {
                           const globalIdx = menuData.items.findIndex(i => i === item);
