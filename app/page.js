@@ -27,14 +27,54 @@ export default function Home() {
     }
   };
 
+  const compressImage = (file, maxWidth = 1920, quality = 0.8) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target.result;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+
+          // Resize if too large
+          if (width > maxWidth) {
+            height = (height * maxWidth) / width;
+            width = maxWidth;
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          canvas.toBlob(
+            (blob) => {
+              resolve(blob);
+            },
+            file.type,
+            quality
+          );
+        };
+        img.onerror = reject;
+      };
+      reader.onerror = reject;
+    });
+  };
+
   const uploadImage = async (file) => {
     setLoading(true);
     setError(null);
     setMenuData(null);
 
     try {
+      // Compress image first
+      const compressedBlob = await compressImage(file);
+      
       const reader = new FileReader();
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(compressedBlob);
       
       reader.onload = async () => {
         try {
@@ -196,6 +236,20 @@ export default function Home() {
             </div>
             <p className="mt-6 sm:mt-8 text-lg sm:text-xl font-semibold text-white">Analyzing menu...</p>
             <p className="mt-2 text-sm sm:text-base text-slate-400">Extracting items</p>
+          </div>
+        ) : error ? (
+          <div className="text-center py-12 sm:py-20 px-4">
+            <div className="mb-6 p-6 bg-red-500/10 border border-red-500/30 rounded-2xl max-w-md mx-auto">
+              <svg className="w-12 h-12 text-red-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <h3 className="text-lg font-semibold text-red-400 mb-2">Analysis Failed</h3>
+              <p className="text-sm text-red-300">{error}</p>
+            </div>
+            <label className="inline-block px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold bg-gradient-to-r from-cyan-500 to-blue-500 text-white hover:from-cyan-400 hover:to-blue-400 transition-all cursor-pointer shadow-xl shadow-cyan-500/30 text-sm sm:text-base">
+              Try Again
+              <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
+            </label>
           </div>
         ) : menuData ? (
           <div>
