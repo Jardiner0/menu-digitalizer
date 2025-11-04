@@ -1,3 +1,5 @@
+// Version 2.0 - Modern Blue Design - Updated 2025-11-04T18:45:00Z
+// CACHE_BUST: 20251104184500
 'use client';
 
 import { useState } from 'react';
@@ -216,7 +218,7 @@ export default function Home() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-        {!preview && !loading ? (
+        {!preview && !loading && !menuData ? (
           <div className="text-center py-12 sm:py-20 px-4">
             <div className="max-w-md mx-auto bg-white rounded-3xl shadow-2xl p-8 sm:p-12">
               <div className="w-20 h-20 mx-auto bg-gradient-to-br from-blue-500 to-cyan-400 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
@@ -241,22 +243,6 @@ export default function Home() {
               </div>
               <p className="mt-6 sm:mt-8 text-xl sm:text-2xl font-bold text-gray-900">Analyzing menu...</p>
               <p className="mt-2 text-sm sm:text-base text-gray-500">Extracting items with AI</p>
-            </div>
-          </div>
-        ) : error ? (
-          <div className="text-center py-12 sm:py-20 px-4">
-            <div className="max-w-md mx-auto bg-white rounded-3xl shadow-2xl p-8 sm:p-12">
-              <div className="w-20 h-20 mx-auto bg-red-100 rounded-2xl flex items-center justify-center mb-6">
-                <svg className="w-10 h-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Analysis Failed</h3>
-              <p className="text-sm text-gray-600 mb-8">{error}</p>
-              <label className="inline-block px-8 sm:px-10 py-4 rounded-2xl font-bold bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:from-blue-500 hover:to-cyan-400 transition-all cursor-pointer shadow-xl hover:shadow-2xl">
-                Try Again
-                <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
-              </label>
             </div>
           </div>
         ) : menuData ? (
@@ -366,6 +352,22 @@ export default function Home() {
                   ))}
                 </div>
               </div>
+            </div>
+          </div>
+        ) : error ? (
+          <div className="text-center py-12 sm:py-20 px-4">
+            <div className="max-w-md mx-auto bg-white rounded-3xl shadow-2xl p-8 sm:p-12">
+              <div className="w-20 h-20 mx-auto bg-red-100 rounded-2xl flex items-center justify-center mb-6">
+                <svg className="w-10 h-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Analysis Failed</h3>
+              <p className="text-sm text-gray-600 mb-8">{error}</p>
+              <label className="inline-block px-8 sm:px-10 py-4 rounded-2xl font-bold bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:from-blue-500 hover:to-cyan-400 transition-all cursor-pointer shadow-xl hover:shadow-2xl">
+                Try Again
+                <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
+              </label>
             </div>
           </div>
         ) : null}
