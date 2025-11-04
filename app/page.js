@@ -172,42 +172,42 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      <header className="bg-slate-800/50 backdrop-blur-xl border-b border-slate-700/50 sticky top-0 z-20">
+    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-500 to-cyan-400">
+      <header className="bg-white shadow-lg sticky top-0 z-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="w-full sm:w-auto">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center">
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center shadow-lg">
+                <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
               </div>
               <div>
-                <h1 className="text-lg sm:text-xl font-bold text-white">Menu Digitalizer</h1>
-                {menuData?.restaurant_name && <p className="text-xs sm:text-sm text-cyan-400">{menuData.restaurant_name}</p>}
+                <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Menu Digitalizer</h1>
+                {menuData?.restaurant_name && <p className="text-sm sm:text-base text-blue-600 font-medium">{menuData.restaurant_name}</p>}
               </div>
             </div>
-            {fileName && <p className="text-xs text-slate-400 mt-2 ml-13 truncate max-w-[200px] sm:max-w-none">📄 {fileName}</p>}
+            {fileName && <p className="text-xs text-gray-500 mt-2 ml-15 truncate max-w-[200px] sm:max-w-none">📄 {fileName}</p>}
           </div>
           <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-end">
             {isSaving && (
-              <div className="flex items-center gap-2 bg-emerald-500/20 px-3 sm:px-4 py-2 rounded-xl border border-emerald-400/30 animate-pulse">
-                <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="flex items-center gap-2 bg-green-500 px-3 sm:px-4 py-2 rounded-xl shadow-lg animate-pulse">
+                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <span className="text-xs sm:text-sm font-medium text-emerald-400 hidden sm:inline">Saved</span>
+                <span className="text-xs sm:text-sm font-semibold text-white hidden sm:inline">Saved</span>
               </div>
             )}
             {menuData && (
-              <button onClick={clearMenu} className="px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-medium text-red-400 hover:bg-red-500/10 border border-red-400/30 transition-all whitespace-nowrap">
+              <button onClick={clearMenu} className="px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-red-600 hover:bg-red-50 border-2 border-red-200 hover:border-red-300 transition-all whitespace-nowrap">
                 Clear
               </button>
             )}
-            <label className="px-4 sm:px-5 py-2.5 rounded-xl text-sm font-medium bg-gradient-to-r from-cyan-500 to-blue-500 text-white hover:from-cyan-400 hover:to-blue-400 transition-all cursor-pointer shadow-lg shadow-cyan-500/25 flex items-center gap-2 whitespace-nowrap">
+            <label className="px-4 sm:px-6 py-2.5 rounded-xl text-sm font-bold bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:from-blue-500 hover:to-cyan-400 transition-all cursor-pointer shadow-lg hover:shadow-xl flex items-center gap-2 whitespace-nowrap">
               <svg className="w-4 sm:w-5 h-4 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
-              <span className="hidden sm:inline">{menuData ? 'New' : 'Upload'}</span>
+              <span className="hidden sm:inline">{menuData ? 'New Menu' : 'Upload Menu'}</span>
               <span className="sm:hidden">+</span>
               <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
             </label>
@@ -218,38 +218,46 @@ export default function Home() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         {!preview && !loading ? (
           <div className="text-center py-12 sm:py-20 px-4">
-            <h3 className="text-xl sm:text-2xl font-bold text-white mb-3">No menu uploaded</h3>
-            <p className="text-sm sm:text-base text-slate-400 mb-6 sm:mb-8">Upload a menu photo to extract items and details</p>
-            <label className="inline-block px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold bg-gradient-to-r from-cyan-500 to-blue-500 text-white hover:from-cyan-400 hover:to-blue-400 transition-all cursor-pointer shadow-xl shadow-cyan-500/30 text-sm sm:text-base">
-              Upload Menu
-              <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
-            </label>
-            <p className="mt-6 text-xs text-slate-500">JPG, PNG • Max 10MB</p>
+            <div className="max-w-md mx-auto bg-white rounded-3xl shadow-2xl p-8 sm:p-12">
+              <div className="w-20 h-20 mx-auto bg-gradient-to-br from-blue-500 to-cyan-400 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">No menu uploaded</h3>
+              <p className="text-sm sm:text-base text-gray-600 mb-8">Upload a menu photo to extract items and details</p>
+              <label className="inline-block px-8 sm:px-10 py-4 rounded-2xl font-bold bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:from-blue-500 hover:to-cyan-400 transition-all cursor-pointer shadow-xl hover:shadow-2xl text-base sm:text-lg">
+                Upload Menu
+                <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
+              </label>
+              <p className="mt-6 text-xs text-gray-400">JPG, PNG • Max 10MB</p>
+            </div>
           </div>
         ) : loading ? (
           <div className="text-center py-12 sm:py-20">
-            <div className="relative inline-block">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-4 border-slate-700 border-t-cyan-400 animate-spin"></div>
-              <svg className="absolute inset-0 m-auto h-8 w-8 sm:h-10 sm:w-10 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
+            <div className="max-w-md mx-auto bg-white rounded-3xl shadow-2xl p-8 sm:p-12">
+              <div className="relative inline-block mb-6">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-4 border-gray-200 border-t-blue-500 animate-spin"></div>
+              </div>
+              <p className="mt-6 sm:mt-8 text-xl sm:text-2xl font-bold text-gray-900">Analyzing menu...</p>
+              <p className="mt-2 text-sm sm:text-base text-gray-500">Extracting items with AI</p>
             </div>
-            <p className="mt-6 sm:mt-8 text-lg sm:text-xl font-semibold text-white">Analyzing menu...</p>
-            <p className="mt-2 text-sm sm:text-base text-slate-400">Extracting items</p>
           </div>
         ) : error ? (
           <div className="text-center py-12 sm:py-20 px-4">
-            <div className="mb-6 p-6 bg-red-500/10 border border-red-500/30 rounded-2xl max-w-md mx-auto">
-              <svg className="w-12 h-12 text-red-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <h3 className="text-lg font-semibold text-red-400 mb-2">Analysis Failed</h3>
-              <p className="text-sm text-red-300">{error}</p>
+            <div className="max-w-md mx-auto bg-white rounded-3xl shadow-2xl p-8 sm:p-12">
+              <div className="w-20 h-20 mx-auto bg-red-100 rounded-2xl flex items-center justify-center mb-6">
+                <svg className="w-10 h-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Analysis Failed</h3>
+              <p className="text-sm text-gray-600 mb-8">{error}</p>
+              <label className="inline-block px-8 sm:px-10 py-4 rounded-2xl font-bold bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:from-blue-500 hover:to-cyan-400 transition-all cursor-pointer shadow-xl hover:shadow-2xl">
+                Try Again
+                <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
+              </label>
             </div>
-            <label className="inline-block px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold bg-gradient-to-r from-cyan-500 to-blue-500 text-white hover:from-cyan-400 hover:to-blue-400 transition-all cursor-pointer shadow-xl shadow-cyan-500/30 text-sm sm:text-base">
-              Try Again
-              <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
-            </label>
           </div>
         ) : menuData ? (
           <div>
@@ -263,96 +271,92 @@ export default function Home() {
             )}
             
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="bg-slate-800/50 backdrop-blur-xl rounded-2xl border border-slate-700/50 p-4 sm:p-6 shadow-2xl">
-                <h2 className="text-base sm:text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                  <svg className="w-4 sm:w-5 h-4 sm:h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  Original
+              <div className="bg-white rounded-3xl shadow-2xl p-4 sm:p-6">
+                <h2 className="text-base sm:text-lg font-bold text-gray-900 mb-4">
+                  Original Menu
                 </h2>
                 <div className="lg:sticky lg:top-28">
-                  <img src={preview} alt="Menu" className="w-full h-auto max-h-[400px] sm:max-h-[700px] object-contain rounded-xl border border-slate-700/50 shadow-xl" />
+                  <img src={preview} alt="Menu" className="w-full h-auto max-h-[400px] sm:max-h-[700px] object-contain rounded-2xl shadow-lg" />
                 </div>
               </div>
 
-              <div className="bg-slate-800/50 backdrop-blur-xl rounded-2xl border border-slate-700/50 p-4 sm:p-6 shadow-2xl">
+              <div className="bg-white rounded-3xl shadow-2xl p-4 sm:p-6">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-3">
-                  <h2 className="text-base sm:text-lg font-semibold text-white flex items-center gap-2">
-                    <svg className="w-4 sm:w-5 h-4 sm:h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                    Digital <span className="text-xs sm:text-sm font-normal text-cyan-400">({menuData.items?.length || 0})</span>
+                  <h2 className="text-base sm:text-lg font-bold text-gray-900 flex items-center gap-2">
+                    Digital Menu <span className="text-xs sm:text-sm font-semibold text-blue-600 bg-blue-100 px-3 py-1 rounded-full">{menuData.items?.length || 0} items</span>
                   </h2>
                   <div className="flex gap-2 w-full sm:w-auto">
-                    <button onClick={exportJSON} className="flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium bg-slate-700/50 text-slate-300 hover:bg-slate-600/50 border border-slate-600/50 transition-all">JSON</button>
-                    <button onClick={exportCSV} className="flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 border border-emerald-400/30 transition-all">CSV</button>
+                    <button onClick={exportJSON} className="flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-all">JSON</button>
+                    <button onClick={exportCSV} className="flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-white bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-400 hover:to-emerald-400 transition-all shadow-md">CSV</button>
                   </div>
                 </div>
 
                 <div className="space-y-4 sm:space-y-6">
                   {Object.entries(groupedItems).map(([category, items]) => (
-                    <div key={category} className="bg-slate-900/30 rounded-xl p-4 sm:p-5 border border-slate-700/30">
-                      <h3 className="text-base sm:text-lg font-bold text-white mb-3 sm:mb-4 pb-2 sm:pb-3 border-b border-cyan-500/30 flex items-center gap-2">
-                        <span className="text-xl sm:text-2xl">{getCategoryIcon(category)}</span>{category}
+                    <div key={category} className="bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl p-4 sm:p-5 border border-gray-200">
+                      <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-3 sm:mb-4 pb-2 sm:pb-3 border-b-2 border-blue-200 flex items-center gap-2">
+                        <span className="text-xl sm:text-2xl">{getCategoryIcon(category)}</span>
+                        <span>{category}</span>
+                      </h3>
                       </h3>
                       <div className="space-y-3 sm:space-y-4">
                         {items.map((item, idx) => {
                           const globalIdx = menuData.items.findIndex(i => i === item);
                           return (
-                            <div key={idx} className="group relative bg-slate-800/30 hover:bg-slate-700/30 rounded-xl p-3 sm:p-4 border border-slate-700/50 hover:border-cyan-500/30 transition-all">
-                              <button onClick={() => confirm('Delete?') && deleteItem(globalIdx)} className="absolute top-2 right-2 sm:top-3 sm:right-3 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30">
+                            <div key={idx} className="group relative bg-white hover:bg-blue-50 rounded-2xl p-3 sm:p-4 border-2 border-gray-200 hover:border-blue-300 transition-all shadow-sm hover:shadow-md">
+                              <button onClick={() => confirm('Delete?') && deleteItem(globalIdx)} className="absolute top-2 right-2 sm:top-3 sm:right-3 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg bg-red-100 text-red-600 hover:bg-red-200">
                                 <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                               </button>
                               
                               <div className="flex justify-between items-start mb-2 pr-10 sm:pr-12">
                                 {editingField?.itemIndex === globalIdx && editingField?.field === 'name' ? (
-                                  <input type="text" defaultValue={item.name} autoFocus onBlur={(e) => { updateItemField(globalIdx, 'name', e.target.value); setEditingField(null); }} onKeyDown={(e) => { if (e.key === 'Enter') { updateItemField(globalIdx, 'name', e.target.value); setEditingField(null); } else if (e.key === 'Escape') setEditingField(null); }} className="text-sm sm:text-base font-semibold text-white bg-slate-900/50 border-b-2 border-cyan-500 focus:outline-none w-full px-2 py-1 rounded" />
+                                  <input type="text" defaultValue={item.name} autoFocus onBlur={(e) => { updateItemField(globalIdx, 'name', e.target.value); setEditingField(null); }} onKeyDown={(e) => { if (e.key === 'Enter') { updateItemField(globalIdx, 'name', e.target.value); setEditingField(null); } else if (e.key === 'Escape') setEditingField(null); }} className="text-sm sm:text-base font-bold text-gray-900 bg-blue-50 border-b-2 border-blue-500 focus:outline-none w-full px-2 py-1 rounded" />
                                 ) : (
-                                  <h4 className="text-sm sm:text-base font-semibold text-white cursor-pointer hover:text-cyan-400 transition-colors" onClick={() => setEditingField({ itemIndex: globalIdx, field: 'name' })}>{item.name}</h4>
+                                  <h4 className="text-sm sm:text-base font-bold text-gray-900 cursor-pointer hover:text-blue-600 transition-colors" onClick={() => setEditingField({ itemIndex: globalIdx, field: 'name' })}>{item.name}</h4>
                                 )}
                                 
                                 {editingField?.itemIndex === globalIdx && editingField?.field === 'price' ? (
-                                  <input type="text" defaultValue={item.price || ''} autoFocus onBlur={(e) => { updateItemField(globalIdx, 'price', e.target.value); setEditingField(null); }} onKeyDown={(e) => { if (e.key === 'Enter') { updateItemField(globalIdx, 'price', e.target.value); setEditingField(null); } else if (e.key === 'Escape') setEditingField(null); }} className="text-base sm:text-lg font-bold text-cyan-400 bg-slate-900/50 border-b-2 border-cyan-500 focus:outline-none w-16 sm:w-20 text-right px-2 py-1 rounded" />
+                                  <input type="text" defaultValue={item.price || ''} autoFocus onBlur={(e) => { updateItemField(globalIdx, 'price', e.target.value); setEditingField(null); }} onKeyDown={(e) => { if (e.key === 'Enter') { updateItemField(globalIdx, 'price', e.target.value); setEditingField(null); } else if (e.key === 'Escape') setEditingField(null); }} className="text-base sm:text-lg font-bold text-blue-600 bg-blue-50 border-b-2 border-blue-500 focus:outline-none w-16 sm:w-20 text-right px-2 py-1 rounded" />
                                 ) : (item.price && item.price.trim()) ? (
-                                  <span className="text-base sm:text-lg font-bold text-cyan-400 ml-2 cursor-pointer hover:opacity-70 whitespace-nowrap" onClick={() => setEditingField({ itemIndex: globalIdx, field: 'price' })}>{item.price}</span>
+                                  <span className="text-base sm:text-lg font-bold text-blue-600 ml-2 cursor-pointer hover:opacity-70 whitespace-nowrap" onClick={() => setEditingField({ itemIndex: globalIdx, field: 'price' })}>{item.price}</span>
                                 ) : (
-                                  <span className="text-xs sm:text-sm text-slate-500 ml-2 cursor-pointer hover:text-cyan-400 italic whitespace-nowrap" onClick={() => setEditingField({ itemIndex: globalIdx, field: 'price' })}>Add price</span>
+                                  <span className="text-xs sm:text-sm text-gray-400 ml-2 cursor-pointer hover:text-blue-500 italic whitespace-nowrap" onClick={() => setEditingField({ itemIndex: globalIdx, field: 'price' })}>Add price</span>
                                 )}
                               </div>
                               
                               {editingField?.itemIndex === globalIdx && editingField?.field === 'description' ? (
-                                <textarea defaultValue={item.description} autoFocus onBlur={(e) => { updateItemField(globalIdx, 'description', e.target.value); setEditingField(null); }} onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); updateItemField(globalIdx, 'description', e.target.value); setEditingField(null); } else if (e.key === 'Escape') setEditingField(null); }} className="text-slate-300 text-xs sm:text-sm mb-2 w-full bg-slate-900/50 border border-cyan-500/50 rounded-lg px-3 py-2 focus:outline-none focus:border-cyan-500" rows={2} />
+                                <textarea defaultValue={item.description} autoFocus onBlur={(e) => { updateItemField(globalIdx, 'description', e.target.value); setEditingField(null); }} onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); updateItemField(globalIdx, 'description', e.target.value); setEditingField(null); } else if (e.key === 'Escape') setEditingField(null); }} className="text-gray-700 text-xs sm:text-sm mb-2 w-full bg-blue-50 border-2 border-blue-300 rounded-xl px-3 py-2 focus:outline-none focus:border-blue-500" rows={2} />
                               ) : item.description ? (
-                                <p className="text-slate-400 text-xs sm:text-sm mb-2 cursor-pointer hover:text-slate-300" onClick={() => setEditingField({ itemIndex: globalIdx, field: 'description' })}>{item.description}</p>
+                                <p className="text-gray-600 text-xs sm:text-sm mb-2 cursor-pointer hover:text-gray-800" onClick={() => setEditingField({ itemIndex: globalIdx, field: 'description' })}>{item.description}</p>
                               ) : (
-                                <p className="text-slate-600 text-xs sm:text-sm mb-2 cursor-pointer hover:text-slate-500 italic" onClick={() => setEditingField({ itemIndex: globalIdx, field: 'description' })}>Add description...</p>
+                                <p className="text-gray-400 text-xs sm:text-sm mb-2 cursor-pointer hover:text-gray-500 italic" onClick={() => setEditingField({ itemIndex: globalIdx, field: 'description' })}>Add description...</p>
                               )}
                               
                               {editingField?.itemIndex === globalIdx && editingField?.field === 'ingredients' ? (
-                                <input type="text" defaultValue={(item.ingredients || []).join(', ')} autoFocus onBlur={(e) => { updateItemField(globalIdx, 'ingredients', e.target.value); setEditingField(null); }} onKeyDown={(e) => { if (e.key === 'Enter') { updateItemField(globalIdx, 'ingredients', e.target.value); setEditingField(null); } else if (e.key === 'Escape') setEditingField(null); }} className="w-full text-xs text-slate-300 bg-slate-900/50 border border-cyan-500/50 rounded-lg px-3 py-2 mb-2 focus:outline-none focus:border-cyan-500" placeholder="Comma-separated" />
+                                <input type="text" defaultValue={(item.ingredients || []).join(', ')} autoFocus onBlur={(e) => { updateItemField(globalIdx, 'ingredients', e.target.value); setEditingField(null); }} onKeyDown={(e) => { if (e.key === 'Enter') { updateItemField(globalIdx, 'ingredients', e.target.value); setEditingField(null); } else if (e.key === 'Escape') setEditingField(null); }} className="w-full text-xs text-gray-700 bg-blue-50 border-2 border-blue-300 rounded-xl px-3 py-2 mb-2 focus:outline-none focus:border-blue-500" placeholder="Comma-separated" />
                               ) : item.ingredients?.length > 0 ? (
-                                <p className="text-xs text-slate-500 mb-2 cursor-pointer hover:text-slate-400" onClick={() => setEditingField({ itemIndex: globalIdx, field: 'ingredients' })}><span className="font-medium">Ingredients:</span> {item.ingredients.join(', ')}</p>
+                                <p className="text-xs text-gray-500 mb-2 cursor-pointer hover:text-gray-700" onClick={() => setEditingField({ itemIndex: globalIdx, field: 'ingredients' })}><span className="font-semibold">Ingredients:</span> {item.ingredients.join(', ')}</p>
                               ) : (
-                                <p className="text-xs text-slate-600 mb-2 cursor-pointer hover:text-slate-500 italic" onClick={() => setEditingField({ itemIndex: globalIdx, field: 'ingredients' })}>Add ingredients...</p>
+                                <p className="text-xs text-gray-400 mb-2 cursor-pointer hover:text-gray-500 italic" onClick={() => setEditingField({ itemIndex: globalIdx, field: 'ingredients' })}>Add ingredients...</p>
                               )}
                               
                               <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                                {item.allergens?.map((a, i) => <span key={i} className="bg-red-500/20 text-red-400 text-xs px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg font-medium cursor-pointer hover:bg-red-500/30 border border-red-400/30" onClick={() => setEditingField({ itemIndex: globalIdx, field: 'tags' })}>⚠️ {a}</span>)}
-                                {item.dietary?.map((d, i) => <span key={i} className="bg-emerald-500/20 text-emerald-400 text-xs px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg font-medium cursor-pointer hover:bg-emerald-500/30 border border-emerald-400/30" onClick={() => setEditingField({ itemIndex: globalIdx, field: 'tags' })}>✓ {d}</span>)}
-                                {(!item.allergens?.length && !item.dietary?.length) && <span onClick={() => setEditingField({ itemIndex: globalIdx, field: 'tags' })} className="text-xs text-slate-600 hover:text-cyan-400 cursor-pointer italic">Add tags...</span>}
+                                {item.allergens?.map((a, i) => <span key={i} className="bg-red-100 text-red-600 text-xs px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg font-semibold cursor-pointer hover:bg-red-200 border border-red-200" onClick={() => setEditingField({ itemIndex: globalIdx, field: 'tags' })}>⚠️ {a}</span>)}
+                                {item.dietary?.map((d, i) => <span key={i} className="bg-green-100 text-green-600 text-xs px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg font-semibold cursor-pointer hover:bg-green-200 border border-green-200" onClick={() => setEditingField({ itemIndex: globalIdx, field: 'tags' })}>✓ {d}</span>)}
+                                {(!item.allergens?.length && !item.dietary?.length) && <span onClick={() => setEditingField({ itemIndex: globalIdx, field: 'tags' })} className="text-xs text-gray-400 hover:text-blue-500 cursor-pointer italic">Add tags...</span>}
                               </div>
                               
                               {editingField?.itemIndex === globalIdx && editingField?.field === 'tags' && (
-                                <div className="mt-3 p-3 sm:p-4 bg-slate-900/50 rounded-xl border border-cyan-500/30">
+                                <div className="mt-3 p-3 sm:p-4 bg-blue-50 rounded-xl border-2 border-blue-200">
                                   <div className="mb-3">
-                                    <label className="text-xs font-medium text-slate-400 block mb-2">Allergens</label>
-                                    <input type="text" defaultValue={(item.allergens || []).join(', ')} onBlur={(e) => updateItemField(globalIdx, 'allergens', e.target.value)} className="w-full text-xs sm:text-sm px-3 py-2 bg-slate-800/50 border border-slate-600/50 rounded-lg focus:outline-none focus:border-cyan-500 text-slate-300" placeholder="nuts, dairy" />
+                                    <label className="text-xs font-semibold text-gray-700 block mb-2">Allergens</label>
+                                    <input type="text" defaultValue={(item.allergens || []).join(', ')} onBlur={(e) => updateItemField(globalIdx, 'allergens', e.target.value)} className="w-full text-xs sm:text-sm px-3 py-2 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 text-gray-700" placeholder="nuts, dairy" />
                                   </div>
                                   <div className="mb-3">
-                                    <label className="text-xs font-medium text-slate-400 block mb-2">Dietary</label>
-                                    <input type="text" defaultValue={(item.dietary || []).join(', ')} onBlur={(e) => updateItemField(globalIdx, 'dietary', e.target.value)} className="w-full text-xs sm:text-sm px-3 py-2 bg-slate-800/50 border border-slate-600/50 rounded-lg focus:outline-none focus:border-cyan-500 text-slate-300" placeholder="vegan, vegetarian" />
+                                    <label className="text-xs font-semibold text-gray-700 block mb-2">Dietary</label>
+                                    <input type="text" defaultValue={(item.dietary || []).join(', ')} onBlur={(e) => updateItemField(globalIdx, 'dietary', e.target.value)} className="w-full text-xs sm:text-sm px-3 py-2 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 text-gray-700" placeholder="vegan, vegetarian" />
                                   </div>
-                                  <button onClick={() => setEditingField(null)} className="text-xs sm:text-sm bg-cyan-500/20 text-cyan-400 px-4 py-2 rounded-lg hover:bg-cyan-500/30 border border-cyan-400/30 font-medium">Done</button>
+                                  <button onClick={() => setEditingField(null)} className="text-xs sm:text-sm bg-gradient-to-r from-blue-600 to-cyan-500 text-white px-4 py-2 rounded-xl hover:from-blue-500 hover:to-cyan-400 font-bold shadow-md">Done</button>
                                 </div>
                               )}
                             </div>
