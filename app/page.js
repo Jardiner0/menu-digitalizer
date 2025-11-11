@@ -1,18 +1,107 @@
-// Version 2.1 - Modern Blue Design - FORCE UPDATE
-// CACHE_BUST: 20251104190000
+// Version 2.2 - With Supabase Authentication
+// CACHE_BUST: 20251104200000
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createClient } from '@/lib/supabase';
+import { menuService } from '@/lib/menuService';
+import Auth from '@/components/Auth';
 
 export default function Home() {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
   const [menuData, setMenuData] = useState(null);
   const [error, setError] = useState(null);
   const [editingField, setEditingField] = useState(null);
   const [fileName, setFileName] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [savedMenus, setSavedMenus] = useState([]);
+  const [currentSessionId, setCurrentSessionId] = useState(null);
+  const [showHistory, setShowHistory] = useState(false);
+  const supabase = createClient();
+
+  useEffect(() => {
+    // Check if user is logged in
+    const checkUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setUser(session?.user ?? null);
+      
+      // Load saved menus if user is logged in
+      if (session?.user) {
+        try {
+          const menus = await menuService.getMenus();
+          setSavedMenus(menus);
+        } catch (error) {
+          console.error('Error loading menus:', error);
+        }
+      }
+      
+      setLoading(false);
+    };
+
+    checkUser();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    setUser(null);
+    setMenuData(null);
+    setPreview(null);
+  };
+
+  const loadMenu = async (session) => {
+    try {
+      setMenuData(session.menu_data);
+      setPreview(session.image_urls?.[0] || null);
+      setCurrentSessionId(session.id);
+      setShowHistory(false);
+    } catch (error) {
+      setError('Failed to load menu');
+    }
+  };
+
+  const deleteMenu = async (id, e) => {
+    e.stopPropagation(); // Prevent triggering loadMenu
+    if (!confirm('Delete this menu?')) return;
+    
+    try {
+      await menuService.deleteMenu(id);
+      const menus = await menuService.getMenus();
+      setSavedMenus(menus);
+      
+      // Clear current menu if it was deleted
+      if (currentSessionId === id) {
+        setMenuData(null);
+        setPreview(null);
+        setCurrentSessionId(null);
+      }
+    } catch (error) {
+      setError('Failed to delete menu');
+    }
+  };
+
+  // Show auth screen if not logged in
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-500 to-cyan-400 flex items-center justify-center">
+        <div className="text-white text-xl">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Auth />;
+  }
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -67,7 +156,7 @@ export default function Home() {
   };
 
   const uploadImage = async (file) => {
-    setLoading(true);
+    setAnalyzing(true);
     setError(null);
     setMenuData(null);
 
@@ -89,19 +178,37 @@ export default function Home() {
           const data = await response.json();
           if (!response.ok) throw new Error(data.error || 'Failed to analyze menu');
           setMenuData(data.menu);
-          setLoading(false);
+          
+          // Auto-save menu to database
+          try {
+            const savedMenu = await menuService.saveMenu(
+              data.menu,
+              data.menu.restaurant_name || 'Untitled Menu',
+              preview
+            );
+            setCurrentSessionId(savedMenu.id);
+            
+            // Refresh saved menus list
+            const menus = await menuService.getMenus();
+            setSavedMenus(menus);
+          } catch (saveError) {
+            console.error('Error saving menu:', saveError);
+            // Don't show error to user, menu is still usable
+          }
+          
+          setAnalyzing(false);
         } catch (err) {
           setError(err.message);
-          setLoading(false);
+          setAnalyzing(false);
         }
       };
       reader.onerror = () => {
         setError('Failed to read image');
-        setLoading(false);
+        setAnalyzing(false);
       };
     } catch (err) {
       setError(err.message);
-      setLoading(false);
+      setAnalyzing(false);
     }
   };
 
@@ -193,8 +300,24 @@ export default function Home() {
               </div>
             </div>
             {fileName && <p className="text-xs text-gray-500 mt-2 ml-15 truncate max-w-[200px] sm:max-w-none">📄 {fileName}</p>}
+            {user && <p className="text-xs text-gray-500 mt-1">👤 {user.email}</p>}
           </div>
           <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-end">
+            <button
+              onClick={() => setShowHistory(!showHistory)}
+              className="px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-gray-700 hover:bg-gray-100 transition-all whitespace-nowrap flex items-center gap-2"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              History {savedMenus.length > 0 && `(${savedMenus.length})`}
+            </button>
+            <button
+              onClick={handleSignOut}
+              className="px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-gray-700 hover:bg-gray-100 transition-all whitespace-nowrap"
+            >
+              Sign Out
+            </button>
             {isSaving && (
               <div className="flex items-center gap-2 bg-green-500 px-3 sm:px-4 py-2 rounded-xl shadow-lg animate-pulse">
                 <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -220,8 +343,62 @@ export default function Home() {
         </div>
       </header>
 
+      {/* History Sidebar */}
+      {showHistory && (
+        <div className="fixed inset-0 z-30 lg:relative">
+          <div className="absolute inset-0 bg-black/50 lg:hidden" onClick={() => setShowHistory(false)}></div>
+          <div className="absolute right-0 top-0 h-full w-80 bg-white shadow-2xl overflow-y-auto lg:relative lg:w-64">
+            <div className="p-4 border-b border-gray-200 flex justify-between items-center sticky top-0 bg-white">
+              <h3 className="font-bold text-gray-900">Saved Menus</h3>
+              <button onClick={() => setShowHistory(false)} className="lg:hidden text-gray-500 hover:text-gray-700">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="p-4 space-y-3">
+              {savedMenus.length === 0 ? (
+                <p className="text-sm text-gray-500 text-center py-8">No saved menus yet</p>
+              ) : (
+                savedMenus.map((session) => (
+                  <div
+                    key={session.id}
+                    onClick={() => loadMenu(session)}
+                    className={`p-3 rounded-xl border-2 cursor-pointer transition-all ${
+                      currentSessionId === session.id
+                        ? 'border-blue-500 bg-blue-50'
+                        : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50'
+                    }`}
+                  >
+                    <div className="flex justify-between items-start mb-2">
+                      <h4 className="font-semibold text-sm text-gray-900 line-clamp-1">
+                        {session.restaurant_name || 'Untitled Menu'}
+                      </h4>
+                      <button
+                        onClick={(e) => deleteMenu(session.id, e)}
+                        className="text-red-400 hover:text-red-600 p-1"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </button>
+                    </div>
+                    <p className="text-xs text-gray-500">
+                      {session.menu_data.items?.length || 0} items
+                    </p>
+                    <p className="text-xs text-gray-400 mt-1">
+                      {new Date(session.created_at).toLocaleDateString()}
+                    </p>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-        {!preview && !loading && !menuData ? (
+        {!preview && !analyzing && !menuData ? (
           <div className="text-center py-12 sm:py-20 px-4">
             <div className="max-w-md mx-auto bg-white rounded-3xl shadow-2xl p-8 sm:p-12">
               <div className="w-20 h-20 mx-auto bg-gradient-to-br from-blue-500 to-cyan-400 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
@@ -238,7 +415,7 @@ export default function Home() {
               <p className="mt-6 text-xs text-gray-400">JPG, PNG • Max 10MB</p>
             </div>
           </div>
-        ) : loading ? (
+        ) : analyzing ? (
           <div className="text-center py-12 sm:py-20">
             <div className="max-w-md mx-auto bg-white rounded-3xl shadow-2xl p-8 sm:p-12">
               <div className="relative inline-block mb-6">
